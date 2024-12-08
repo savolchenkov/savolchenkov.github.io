@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Собери автомобиль</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
+<body>
+    <div class="ec-cart-widget"></div>
+<div>
+<script data-cfasync="false" type="text/javascript" src="https://app.ecwid.com/script.js?110825652&data_platform=code&data_date=2024-12-07" charset="utf-8"></script>
+<script type="text/javascript">Ecwid.init();</script>
+</div>
+    <h1>СОБЕРИ АВТОМОБИЛЬ</h1>
+    
+    <div class="car-container">
+        
+        <img src="./car_shematic.jpeg" alt="car shematic image" class="car-image">
+
+        <div id="713592467" class="clickable-area" style="top: 23%; left: 38%; width: 15%; height: 58%; border-radius: 35%;" onclick="addToCart(713592467)" title="Передняя дверь"></div>
+        <div id="713620656" class="clickable-area" style="top: 23%; left: 54%; width: 11%; height: 58%; border-radius: 35%;" onclick="addToCart(713620656)" title="Задняя дверь"></div>
+        <div id="713634720" class="clickable-area" style="top: 58%; left: 23%; width: 10%; height: 32%; border-radius: 50%;" onclick="addToCart(713634720)"title="Переднее колесо"></div>
+        <div id="713615421" class="clickable-area" style="top: 58%; left: 66%; width: 10%; height: 32%; border-radius: 50%;" onclick="addToCart(713615421)"title="Заднее колесо"></div>
+        <div id="713615426" class="clickable-area" style="top: 53%; left: 17%; width: 6%; height: 10%; border-radius: 35%;" onclick="addToCart(713615426)"title="Передняя фара"></div>
+    </div>
+
+    <div id="message">
+        <p>Вы собрали автомобиль!</p>
+        <button id="resetButton" onclick="resetCart()">Начать заново</button>
+    </div>
+
+    <script>
+
+        const maxItemsCart = 5;
+        let currentItems = 0;
+
+        Ecwid.OnAPILoaded.add(function() {
+            Ecwid.Cart.get(function(cart){
+                cartQtyCheck(cart.productsQuantity);
+                cartProductsCheck(cart.items)
+            });
+        })
+
+        function addToCart(productId) {
+            document.getElementById(productId).style.display = 'none';
+
+            if (currentItems < maxItemsCart) {
+                Ecwid.Cart.addProduct({
+                    id: productId,
+                    quantity: 1,
+                    callback: function(success, product, cart) {
+                        cartQtyCheck(cart.productsQuantity)
+                    }
+                });
+            }
+        }
+
+        function cartProductsCheck(items) {
+            for (let i = 0; i < items.length; i++) {
+                document.getElementById(items[i].product.id).style.display = 'none';
+            }
+        }
+
+        function cartQtyCheck(productQty) {
+            if (productQty >= maxItemsCart) {
+                document.querySelector(".car-container").style.display = 'none';
+                document.getElementById("message").style.display = 'block';
+            } else {
+                document.querySelector(".car-container").style.display = 'block';
+            }
+
+            currentItems = productQty;
+        }
+
+        function resetCart() {
+            Ecwid.Cart.clear();
+            currentItems = 0;
+            document.querySelector(".car-container").style.display = 'block';
+            document.getElementById("message").style.display = 'none';
+            document.getElementById("713592467").style.display = 'block';
+            document.getElementById("713620656").style.display = 'block';
+            document.getElementById("713634720").style.display = 'block';
+            document.getElementById("713615421").style.display = 'block';
+            document.getElementById("713615426").style.display = 'block';
+        
+
+        }
+    </script>
+
+</body>
+</html>
