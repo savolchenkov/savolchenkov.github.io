@@ -17,8 +17,7 @@
 </div>
     <h1>СОБЕРИ АВТОМОБИЛЬ</h1>
     
-    <div class="car-container">
-        
+    <div class="car-container">     
         <img src="./car_shematic.jpeg" alt="car shematic image" class="car-image">
 
         <div class="clickable-area" style="top: 23%; left: 38%; width: 15%; height: 58%; border-radius: 35%;" onclick="addToCart(713592467)" title="Передняя дверь"></div>
@@ -37,7 +36,6 @@
     </div>
 
     <script>
-        const productIds = [713592467, 713620656, 713634720, 713615421, 713615426];
         
         Ecwid.OnAPILoaded.add(function() {
             Ecwid.Cart.get(function(cart){
@@ -55,27 +53,23 @@
             });
         }
 
-        function canAddMoreToCart(productIds, cartItems) {
-            const productSet = new Set(productIds);
-            for (const item of cartItems) {
-                productSet.delete(item.product.id);
-            }
-            return productSet.size > 0;
-        }
-
         Ecwid.OnCartChanged.add(function(cart){
             cartCheck(cart.items)
         });
 
-        function cartCheck(items) {
-            if (canAddMoreToCart(productIds, items)) {
+        function cartCheck(items) { 
+            const uniqueProductIds = new Set();
+            items.forEach(function(item) {
+                uniqueProductIds.add(item.product.id);
+            });
+            if (uniqueProductIds.size >= 5) {
                 // console.log('Можно добавить еще товары в корзину');
-                document.querySelector(".car-container").style.display = 'block';
-                document.getElementById("message").style.display = 'none';
-            } else {
-                // console.log('Все товары добавлены в корзину');
                 document.querySelector(".car-container").style.display = 'none';
                 document.getElementById("message").style.display = 'block';
+            } else {
+                // console.log('Все товары добавлены в корзину');
+                document.querySelector(".car-container").style.display = 'block';
+                document.getElementById("message").style.display = 'none';
             }
         }
 
