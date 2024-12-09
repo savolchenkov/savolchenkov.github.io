@@ -24,6 +24,17 @@ body {
     background-color: rgb(21 255 0 / 19%);
 }
 
+#wheel .clickable-area {
+    position: absolute;
+    background-color: rgb(21 255 0 / 0%);
+    border: 3px dashed rgb(248, 52, 52);
+    cursor: pointer;
+}
+
+#wheel:hover .clickable-area {
+    background-color: rgb(21 255 0 / 19%);
+}
+
 #message {
     font-size: 24px;
     margin-top: 20px;

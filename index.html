@@ -21,11 +21,14 @@
         
         <img src="./car_shematic.jpeg" alt="car shematic image" class="car-image">
 
-        <div id="713592467" class="clickable-area" style="top: 23%; left: 38%; width: 15%; height: 58%; border-radius: 35%;" onclick="addToCart(713592467)" title="Передняя дверь"></div>
-        <div id="713620656" class="clickable-area" style="top: 23%; left: 54%; width: 11%; height: 58%; border-radius: 35%;" onclick="addToCart(713620656)" title="Задняя дверь"></div>
-        <div id="713634720" class="clickable-area" style="top: 58%; left: 23%; width: 10%; height: 32%; border-radius: 50%;" onclick="addToCart(713634720)"title="Переднее колесо"></div>
-        <div id="713615421" class="clickable-area" style="top: 58%; left: 66%; width: 10%; height: 32%; border-radius: 50%;" onclick="addToCart(713615421)"title="Заднее колесо"></div>
-        <div id="713615426" class="clickable-area" style="top: 53%; left: 17%; width: 6%; height: 10%; border-radius: 35%;" onclick="addToCart(713615426)"title="Передняя фара"></div>
+        <div class="clickable-area" style="top: 23%; left: 38%; width: 15%; height: 58%; border-radius: 35%;" onclick="addToCart(713592467)" title="Передняя дверь"></div>
+        <div class="clickable-area" style="top: 23%; left: 54%; width: 11%; height: 58%; border-radius: 35%;" onclick="addToCart(713620656)" title="Задняя дверь"></div>
+        <div id="wheel" onclick="addToCart(713634720)" title="Колесо">
+            <div class="clickable-area" style="top: 58%; left: 23%; width: 10%; height: 32%; border-radius: 50%;"></div>
+            <div class="clickable-area" style="top: 58%; left: 66%; width: 10%; height: 32%; border-radius: 50%;"></div>
+        </div>
+        <div class="clickable-area" style="top: 53%; left: 17%; width: 6%; height: 10%; border-radius: 35%;" onclick="addToCart(713615426)" title="Передняя фара"></div>
+        <div class="clickable-area" style="top: 44%; left: 80%; width: 4%; height: 10%; border-radius: 35%;" onclick="addToCart(713615421)" title="Задняя фара"></div>
     </div>
 
     <div id="message">
@@ -34,60 +37,52 @@
     </div>
 
     <script>
-
-        const maxItemsCart = 5;
-        let currentItems = 0;
-
+        const productIds = [713592467, 713620656, 713634720, 713615421, 713615426];
+        
         Ecwid.OnAPILoaded.add(function() {
             Ecwid.Cart.get(function(cart){
-                cartQtyCheck(cart.productsQuantity);
-                cartProductsCheck(cart.items)
+            cartCheck(cart.items);
             });
         })
 
         function addToCart(productId) {
-            document.getElementById(productId).style.display = 'none';
-
-            if (currentItems < maxItemsCart) {
-                Ecwid.Cart.addProduct({
-                    id: productId,
-                    quantity: 1,
-                    callback: function(success, product, cart) {
-                        cartQtyCheck(cart.productsQuantity)
-                    }
-                });
-            }
+            Ecwid.Cart.addProduct({
+                id: productId,
+                quantity: 1,
+                callback: function(success, product, cart) {
+                    cartCheck(cart.items)
+                }
+            });
         }
 
-        function cartProductsCheck(items) {
-            for (let i = 0; i < items.length; i++) {
-                document.getElementById(items[i].product.id).style.display = 'none';
+        function canAddMoreToCart(productIds, cartItems) {
+            const productSet = new Set(productIds);
+            for (const item of cartItems) {
+                productSet.delete(item.product.id);
             }
+            return productSet.size > 0;
         }
 
-        function cartQtyCheck(productQty) {
-            if (productQty >= maxItemsCart) {
+        Ecwid.OnCartChanged.add(function(cart){
+            cartCheck(cart.items)
+        });
+
+        function cartCheck(items) {
+            if (canAddMoreToCart(productIds, items)) {
+                // console.log('Можно добавить еще товары в корзину');
+                document.querySelector(".car-container").style.display = 'block';
+                document.getElementById("message").style.display = 'none';
+            } else {
+                // console.log('Все товары добавлены в корзину');
                 document.querySelector(".car-container").style.display = 'none';
                 document.getElementById("message").style.display = 'block';
-            } else {
-                document.querySelector(".car-container").style.display = 'block';
             }
-
-            currentItems = productQty;
         }
 
         function resetCart() {
             Ecwid.Cart.clear();
-            currentItems = 0;
             document.querySelector(".car-container").style.display = 'block';
             document.getElementById("message").style.display = 'none';
-            document.getElementById("713592467").style.display = 'block';
-            document.getElementById("713620656").style.display = 'block';
-            document.getElementById("713634720").style.display = 'block';
-            document.getElementById("713615421").style.display = 'block';
-            document.getElementById("713615426").style.display = 'block';
-        
-
         }
     </script>
 
