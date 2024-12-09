@@ -42,6 +42,10 @@
             cartCheck(cart.items);
             });
         })
+        
+        Ecwid.OnCartChanged.add(function(cart){
+            cartCheck(cart.items)
+        });
 
         function addToCart(productId) {
             Ecwid.Cart.addProduct({
@@ -52,10 +56,6 @@
                 }
             });
         }
-
-        Ecwid.OnCartChanged.add(function(cart){
-            cartCheck(cart.items)
-        });
 
         function cartCheck(items) { 
             const uniqueProductIds = new Set();
