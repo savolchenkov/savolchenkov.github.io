@@ -13,17 +13,7 @@ body {
     max-width: 75%;
     height: auto;
 }
-.clickable-area {
-    position: absolute;
-    background-color: rgb(21 255 0 / 0%);
-    border: 3px dashed rgb(248, 52, 52);
-    cursor: pointer;
-}
-
-.clickable-area:hover {
-    background-color: rgb(21 255 0 / 19%);
-}
-
+.clickable-area,
 #wheel .clickable-area {
     position: absolute;
     background-color: rgb(21 255 0 / 0%);
@@ -31,6 +21,7 @@ body {
     cursor: pointer;
 }
 
+.clickable-area:hover,
 #wheel:hover .clickable-area {
     background-color: rgb(21 255 0 / 19%);
 }
